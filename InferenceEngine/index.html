@@ -7,6 +7,33 @@
 	<meta name="author" content="ASquigglyTwist" />
 	<meta name="description" content="InferenceEngine - An independent library for parsing and inferring from content within a web-page." />
 	<title>JSUtils | InferenceEngine [ASquigglyTwist]</title>
+	<style>
+	body {
+		font-family: 'Verdana';
+		font-size: 14px;
+	}
+	h1 {
+		font-size: 24px;
+		text-align: center;
+	}
+	h2 {
+		font-size: 18px;
+	}
+	table {
+		border: 2px solid black;
+		border-collapse: collapse;
+		margin-left: 25px;;
+	}
+	tr > th, tr > td {
+		border: 1px dotted black;
+		margin: 1px;
+		padding: 2px;
+	}
+	.modified, *[data-infer-engine-transformed="true"] {
+		background-color: yellow;
+		color: red;
+	}
+	</style>
 	<script src="scripts/InferenceEngine.js" async="async" defer="defer" onload="InferEngine.inferFromPage('#InferredFrom tr > td');">
     </script>
 </head>
@@ -18,7 +45,7 @@
 		<article>
 			This is a demo for the &quot;InferenceEngine&quot; JS Library.
 			<section>
-				<h2>With InferenceEngine (Modified):</h2>
+				<h2>With InferenceEngine <span class="modified">(Modified)</span>:</h2>
 				<table id="InferredFrom">
 					<tr>
 						<th>Name</th>
@@ -56,7 +83,7 @@
 						<td>Remi</td>
 						<td>Remi</td>
 						<td>Remi@UnOrdinary.com</td>
-						<td>2003-15-25</td>
+						<td>2003-05-25</td>
 						<td>645003</td>
 						<td data-ability="Lightning">Lightning</td>
 					</tr>
@@ -117,7 +144,7 @@
 						<td>Arlo</td>
 						<td>Arlo</td>
 						<td>Arlo@UnOrdinary.com</td>
-						<td>2003-11-18</td>
+						<td>2003-01-28</td>
 						<td>645002</td>
 						<td data-ability="Barrier">Barrier</td>
 					</tr>
@@ -125,7 +152,7 @@
 						<td>Remi</td>
 						<td>Remi</td>
 						<td>Remi@UnOrdinary.com</td>
-						<td>2003-11-18</td>
+						<td>2003-05-25</td>
 						<td>645003</td>
 						<td data-ability="Lightning">Lightning</td>
 					</tr>
@@ -133,7 +160,7 @@
 						<td>Isen</td>
 						<td>Isen</td>
 						<td>Isen@UnOrdinary.com</td>
-						<td>2003-11-18</td>
+						<td>2002-12-31</td>
 						<td>645004</td>
 						<td data-ability="Hunter">Hunter</td>
 					</tr>
@@ -141,7 +168,7 @@
 						<td>Blyke</td>
 						<td>Blyke</td>
 						<td>Blyke@UnOrdinary.com</td>
-						<td>2003-11-18</td>
+						<td>2003-03-11</td>
 						<td>645005</td>
 						<td data-ability="Energy_Beam">Energy Beam</td>
 					</tr>
@@ -149,7 +176,7 @@
 						<td>Elaine</td>
 						<td>Elaine</td>
 						<td>Elaine@UnOrdinary.com</td>
-						<td>2002-12-03</td>
+						<td>2003-11-18</td>
 						<td>645006</td>
 						<td data-ability="Healing">Healing</td>
 					</tr>
