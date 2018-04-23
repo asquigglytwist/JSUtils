@@ -283,7 +283,7 @@ class InferEngine {
 		
         for (let i = 0, len = nodes.length; i < len; i++) {
             let curNode = nodes[i];
-            console.debug("Node [" + i + "]" + curNode.innerHTML);
+            console.debug("Node [" + i + "].innerHTML:  " + curNode.innerHTML);
             for (var key of mapTests.keys()) {
                 if (mapTests.get(key).matches(curNode)) {
                     mapTransforms.get(key).transform(mapTests.get(key).parsedValue, curNode);
