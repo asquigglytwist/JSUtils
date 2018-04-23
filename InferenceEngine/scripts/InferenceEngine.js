@@ -105,6 +105,27 @@ class IsEmail extends InferenceTest {
     }
 }
 
+class HasUnOrdinaryAbility extends InferenceTest {
+    constructor() {
+        super();
+        this._parsedValue = [];
+    }
+    matches(node) {
+		let nodeContent = node.innerHTML;
+        if (nodeContent && nodeContent.length) {
+			let abilityInfo = node.getAttribute("data-ability");
+			if (abilityInfo && abilityInfo.length) {
+				this._parsedValue = abilityInfo;
+				return true;
+			}
+        }
+        return false;
+    }
+    get parsedValue() {
+        return this._parsedValue;
+    }
+}
+
 
 class ValueTransform {
     transform(parsedValue) {
@@ -213,6 +234,25 @@ class EmailAutoLinkify extends ValueTransform {
     }
 }
 
+class UnOrdinaryAbilityLinkify extends ValueTransform {
+    constructor() {
+        super();
+    }
+    transform(parsedValue, curNode) {
+        if (curNode.innerHTML.length > 5) {
+            var autoLink = "http://unordinary.wikia.com/" + parsedValue;
+            var anchor = document.createElement("a");
+            anchor.href = anchor.title = autoLink;
+            anchor.innerHTML = curNode.innerHTML;
+            // [BIB]:  https://stackoverflow.com/questions/843680/how-to-replace-dom-element-in-place-using-javascript
+            //curNode.parentNode.replaceChild(anchor, curNode);
+            curNode.innerHTML = anchor.outerHTML;
+			curNode.dataset.inferEngineTransformed = "true";
+        }
+        return parsedValue;
+    }
+}
+
 
 class InferEngine {
     static inferFromPage(query) {
@@ -234,10 +274,12 @@ class InferEngine {
 		mapTests.set("IsANumber", new IsANumber());
         mapTests.set("IsADate", new IsADate());
         mapTests.set("IsEmail", new IsEmail());
+        mapTests.set("HasUnOrdinaryAbility", new HasUnOrdinaryAbility());
 		
         mapTransforms.set("IsANumber", new StudentId());
         mapTransforms.set("IsADate", new RelativeDateInfo());
         mapTransforms.set("IsEmail", new EmailAutoLinkify());
+        mapTransforms.set("HasUnOrdinaryAbility", new UnOrdinaryAbilityLinkify());
 		
         for (let i = 0, len = nodes.length; i < len; i++) {
             let curNode = nodes[i];
