@@ -1,5 +1,5 @@
 class InferenceTest {
-    matches(nodeContent) {
+    matches(node) {
         throw new TypeError('This method should be overridden by inheriting classes.');
     }
     get parsedValue() {
@@ -8,7 +8,8 @@ class InferenceTest {
 }
 
 class IsEmpty extends InferenceTest {
-    matches(nodeContent) {
+    matches(node) {
+		let nodeContent = node.innerHTML;
         if (nodeContent && nodeContent.length) {
             return false;
         }
@@ -32,7 +33,8 @@ class IsANumber extends InferenceTest {
     static isNumeric(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
-    matches(nodeContent) {
+    matches(node) {
+		let nodeContent = node.innerHTML;
         if (nodeContent && nodeContent.length) {
             this._parsedValue = parseFloat(nodeContent);
             return IsANumber.isNumeric(nodeContent);
@@ -49,7 +51,8 @@ class HasNumber extends InferenceTest {
     get parsedValue() {
         return this._parsedValue;
     }
-    matches(nodeContent) {
+    matches(node) {
+		let nodeContent = node.innerHTML;
         if (nodeContent && nodeContent.length) {
             this._parsedValue = parseFloat(nodeContent);
             return !isNaN(parseFloat(nodeContent));
@@ -70,7 +73,8 @@ class IsADate extends InferenceTest {
     static isDate(date) {
         return (date !== "Invalid Date" && !isNaN(date)) ? true : false;
     }
-    matches(nodeContent) {
+    matches(node) {
+		let nodeContent = node.innerHTML;
         if (nodeContent && nodeContent.length) {
             this._parsedValue = new Date(nodeContent);
             return IsADate.isDate(this._parsedValue);
@@ -84,7 +88,8 @@ class IsEmail extends InferenceTest {
         super();
         this._parsedValue = [];
     }
-    matches(nodeContent) {
+    matches(node) {
+		let nodeContent = node.innerHTML;
         if (nodeContent && nodeContent.length) {
             // [BIB]:  https://stackoverflow.com/a/16424719
             var emailsArray = nodeContent.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
@@ -120,6 +125,7 @@ class StudentId extends ValueTransform {
             // [BIB]:  https://stackoverflow.com/questions/843680/how-to-replace-dom-element-in-place-using-javascript
             //curNode.parentNode.replaceChild(anchor, curNode);
             curNode.innerHTML = anchor.outerHTML;
+			curNode.dataset.inferEngineTransformed = "true";
         }
         return parsedValue;
     }
@@ -185,6 +191,7 @@ class RelativeDateInfo extends ValueTransform {
         var diff = RelativeDateInfo.dateDiffInDays(parsedValue, new Date());
         var relativeTimeSpan = RelativeDateInfo.daysToRelativeTimeSpan(diff);
         curNode.setAttribute("title", relativeTimeSpan);
+		curNode.dataset.inferEngineTransformed = "true";
     }
 }
 
@@ -200,6 +207,7 @@ class EmailAutoLinkify extends ValueTransform {
                 newContent = newContent.replace(email, anchor);
             }
             curNode.innerHTML = newContent;
+			curNode.dataset.inferEngineTransformed = "true";
         }
         return parsedValue;
     }
@@ -222,21 +230,20 @@ class InferEngine {
         }
         // [BIB]:  https://stackoverflow.com/questions/1144705/best-way-to-store-a-key-value-array-in-javascript
         let mapTests = new Map(), mapTransforms = new Map();
-        //mapTests.set("IsEmpty", new IsEmpty());
-        mapTests.set("IsANumber", new IsANumber());
-        //mapTests.set("HasNumber", new HasNumber());
+        
+		mapTests.set("IsANumber", new IsANumber());
         mapTests.set("IsADate", new IsADate());
         mapTests.set("IsEmail", new IsEmail());
-        //mapTransforms.set("IsEmpty", new IsEmpty());
+		
         mapTransforms.set("IsANumber", new StudentId());
-        //mapTransforms.set("HasNumber", new HasNumber());
         mapTransforms.set("IsADate", new RelativeDateInfo());
         mapTransforms.set("IsEmail", new EmailAutoLinkify());
+		
         for (let i = 0, len = nodes.length; i < len; i++) {
             let curNode = nodes[i];
             console.debug("Node [" + i + "]" + curNode.innerHTML);
             for (var key of mapTests.keys()) {
-                if (mapTests.get(key).matches(curNode.innerHTML)) {
+                if (mapTests.get(key).matches(curNode)) {
                     mapTransforms.get(key).transform(mapTests.get(key).parsedValue, curNode);
                 }
             }
